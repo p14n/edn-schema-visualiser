@@ -1,4 +1,4 @@
-csv-visualiser
-==============
+edn-schema-visualiser
+=====================
 
-London Clojure Dojo Late August 2014
+Takes a JSON structure and displays the Datomic schema for it.
