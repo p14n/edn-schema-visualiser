@@ -6,7 +6,8 @@
                  [org.clojure/clojurescript "0.0-2311"]
                  [om "0.7.1"]
                  [sablono "0.2.20"]
-                 [testdouble/clojurescript.csv "0.1.1"]]
+                 [testdouble/clojurescript.csv "0.1.1"]
+                 [com.cognitect/transit-cljs "0.8.184"]]
 
   :plugins [[lein-cljsbuild "1.0.4-SNAPSHOT"]]
 

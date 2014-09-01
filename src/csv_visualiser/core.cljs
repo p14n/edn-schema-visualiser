@@ -4,8 +4,10 @@
             [goog.dom.classes :as classes]
             [sablono.core :as html :refer-macros [html]]
             [cljs.reader :as reader]
-            [clojure.string :as string])
-  (:import [goog.events EventType]))
+            [clojure.string :as string]
+            [csv-visualiser.ednschema :as edn]
+            [cognitect.transit :as t])
+ (:import [goog.events.EventType]))
 
 (enable-console-print!)
 
@@ -20,7 +22,8 @@
 
 
 (defn process-file [file cursor]
- (let [datas (map #(string/split % ",") (string/split file "\n"))]
+  (let [r (t/reader :json)
+        datas (t/read r file)]
    (om/update! cursor :contents datas)))
 
 (defn handle-file-select [cursor evt]
@@ -63,7 +66,7 @@
     om/IRender
     (render [_]
       (html
-       [:p "Drop your CSV here"]))))
+       [:p "Drop your JSON here"]))))
 
 (defn csv-contents-table [cursor owner]
   (reify
@@ -83,22 +86,34 @@
               [:td d])])
            ]]]]))))
 
-(defn see-my-csv [cursor owner]
+(defn edn-contents-area [cursor owner]
+  (reify
+    om/IRender
+    (render [_]
+      (html
+       [:div
+        [:div.well.well-lg
+         [:pre
+          (str
+           (reverse
+            (partition-by #(namespace (:db/ident %))
+                          (edn/to-schema "dash" (:contents cursor)))))]
+         ]]))))
+
+(defn see-my-edn [cursor owner]
   (reify
     om/IRender
     (render [_]
       (html
        [:div
         [:div.class.page-header
-         [:h1 "See my CSV" [:button {:type "button"
-                                     :class "btn btn-warning pull-right"
-                                     :on-click (fn [e] (om/update! cursor :contents (apply map list (:contents @cursor))))} "Transpose!"]]]
+         [:h1 "See my EDN"]]
         (if-not (seq (:contents cursor))
           [:div {:id "drop-zone"}
            [:div.well.well-lg
             (om/build drop-zone cursor)]]
           [:div
-           (om/build csv-contents-table cursor)])]))))
+           (om/build edn-contents-area cursor)])]))))
 
-(om/root see-my-csv app-model
+(om/root see-my-edn app-model
          {:target (.getElementById js/document "app")})
