@@ -12,7 +12,8 @@
 (enable-console-print!)
 
 (def app-model (atom {:contents []
-                      :alert {}}))
+                      :alert {}
+                      :root-name ""}))
 
 (defn log [& s]
   (.log js/console (apply str s)))
@@ -21,10 +22,12 @@
   (.getElementById js/document id))
 
 
-(defn process-file [file cursor]
+(defn process-file [file-name file cursor]
   (let [r (t/reader :json)
         datas (t/read r file)]
-   (om/update! cursor :contents datas)))
+    (om/update! cursor :contents datas)
+    (om/update! cursor :root-name (.substring file-name 0 (.indexOf file-name ".")))
+    ))
 
 (defn handle-file-select [cursor evt]
   (.stopPropagation evt)
@@ -41,7 +44,7 @@
                                     (.log js/console idx)
                                     (.slice file-content 4 idx))
                                   (.-name the-file))]
-                  (process-file file-content cursor))))
+                  (process-file file-name file-content cursor))))
         (.readAsText rdr the-file)))))
 
 (defn handle-drag-over [evt]
@@ -80,7 +83,7 @@
           (edn/pp
            (reverse
             (partition-by #(namespace (:db/ident %))
-                          (edn/to-schema "dash" (:contents cursor)))))]
+                          (edn/to-schema (:root-name cursor) (:contents cursor)))))]
          ]]))))
 
 (defn see-my-edn [cursor owner]
