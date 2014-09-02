@@ -1,7 +1,17 @@
 (ns csv-visualiser.ednschema)
 
 ;;(reverse (partition-by #(namespace (:db/ident %)) (to-schema "dash" d)))
+;;
 
+(defn ppmap [m]
+  (str "{\n"
+       (apply str (map
+                   #(str "  " (first %) " " (second %) "\n" )
+                   m)) "}\n"))
+
+(defn pp [sch]
+  (for [schema sch] (str "\n;;" (namespace (:db/ident (first schema))) "\n"
+                         (apply str (map ppmap schema)))))
 
 (defn cardinality [x]
   (cond 
@@ -39,8 +49,19 @@
 
 (declare to-schema)
 
+(defn trim-plural [name]
+  (.substring name 0 (dec (count name))))
+
+(defn new-parent-name [data]
+  "Drop naming plurality for collections"
+  (if (and (coll? (second data))
+           (.endsWith (first data) "s"))
+    (trim-plural (first data))
+    (first data)))
+
 (defn external-schema [data]
-  (doall (map #(apply to-schema %) (filter object-filter data))))
+  (let [schema-func #(to-schema (new-parent-name %) (second %))]
+    (doall (map schema-func (filter object-filter data)))))
 
 (defn to-schema [root-schema-name data]
   (if (map? data)

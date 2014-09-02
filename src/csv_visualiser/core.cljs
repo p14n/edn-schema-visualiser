@@ -68,23 +68,6 @@
       (html
        [:p "Drop your JSON here"]))))
 
-(defn csv-contents-table [cursor owner]
-  (reify
-    om/IRender
-    (render [_]
-      (html
-       [:div
-        [:div.well.well-lg
-         [:table.table.table-striped.table-hover
-          [:thead
-           [:tr
-            (for [c (first (:contents cursor))]
-              [:th c])]]
-          [:tbody
-           (for [r (rest (:contents cursor))]
-              [:tr (for [d r]
-              [:td d])])
-           ]]]]))))
 
 (defn edn-contents-area [cursor owner]
   (reify
@@ -94,7 +77,7 @@
        [:div
         [:div.well.well-lg
          [:pre
-          (str
+          (edn/pp
            (reverse
             (partition-by #(namespace (:db/ident %))
                           (edn/to-schema "dash" (:contents cursor)))))]
