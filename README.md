@@ -14,7 +14,7 @@ With hat-tip to @annapawlicka for writing all the om ceremony!
 
 dashboard.json containing:
 
-'''
+```
 {
  "title":"My dashboard",
   "structure":"4-8",
@@ -33,11 +33,11 @@ dashboard.json containing:
     }]
    }]
   }]}
-'''
+```
 
 becomes:
 
-'''
+```
 ;;dashboard
 {
   :db/id #db/id[:db.part/db]
@@ -133,4 +133,4 @@ becomes:
   :db/valueType :db.type/string
   :db.install/_attribute :db.part/db
 }
-'''
+```
