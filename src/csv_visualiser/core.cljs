@@ -1,11 +1,11 @@
-(ns csv-visualiser.core
+(ns edn-visualiser.core
   (:require [om.core :as om  :include-macros true]
             [goog.events :as events]
             [goog.dom.classes :as classes]
             [sablono.core :as html :refer-macros [html]]
             [cljs.reader :as reader]
             [clojure.string :as string]
-            [csv-visualiser.ednschema :as edn]
+            [edn-visualiser.ednschema :as edn]
             [cognitect.transit :as t])
  (:import [goog.events.EventType]))
 

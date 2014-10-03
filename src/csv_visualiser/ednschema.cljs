@@ -1,4 +1,5 @@
-(ns csv-visualiser.ednschema)
+(ns edn-visualiser.ednschema
+    (:use [inflections.core :only [singular]]))
 
 ;;(reverse (partition-by #(namespace (:db/ident %)) (to-schema "dash" d)))
 ;;
@@ -49,14 +50,10 @@
 
 (declare to-schema)
 
-(defn trim-plural [name]
-  (.substring name 0 (dec (count name))))
-
 (defn new-parent-name [data]
   "Drop naming plurality for collections"
-  (if (and (coll? (second data))
-           (.endsWith (first data) "s"))
-    (trim-plural (first data))
+  (if (coll? (second data))
+    (singular (first data))
     (first data)))
 
 (defn external-schema [data]

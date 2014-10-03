@@ -1,6 +1,11 @@
 goog.addDependency("base.js", ['goog'], []);
 goog.addDependency("../cljs/core.js", ['cljs.core'], ['goog.string', 'goog.object', 'goog.string.StringBuffer', 'goog.array']);
-goog.addDependency("../csv_visualiser/ednschema.js", ['csv_visualiser.ednschema'], ['cljs.core']);
+goog.addDependency("../clojure/string.js", ['clojure.string'], ['goog.string', 'cljs.core', 'goog.string.StringBuffer']);
+goog.addDependency("../cljs/reader.js", ['cljs.reader'], ['goog.string', 'cljs.core', 'goog.string.StringBuffer']);
+goog.addDependency("../no/en/core.js", ['no.en.core'], ['cljs.core', 'goog.crypt.base64', 'clojure.string', 'cljs.reader']);
+goog.addDependency("../clojure/walk.js", ['clojure.walk'], ['cljs.core']);
+goog.addDependency("../inflections/core.js", ['inflections.core'], ['no.en.core', 'cljs.core', 'clojure.string', 'clojure.walk']);
+goog.addDependency("../edn_visualiser/ednschema.js", ['edn_visualiser.ednschema'], ['cljs.core', 'inflections.core']);
 goog.addDependency("../om/dom.js", ['om.dom'], ['cljs.core']);
 goog.addDependency("../com/cognitect/transit/util.js", ['com.cognitect.transit.util'], ['goog.object']);
 goog.addDependency("../com/cognitect/transit/delimiters.js", ['com.cognitect.transit.delimiters'], []);
@@ -10,8 +15,6 @@ goog.addDependency("../com/cognitect/transit/types.js", ['com.cognitect.transit.
 goog.addDependency("../com/cognitect/transit/impl/decoder.js", ['com.cognitect.transit.impl.decoder'], ['com.cognitect.transit.util', 'com.cognitect.transit.delimiters', 'com.cognitect.transit.caching', 'com.cognitect.transit.types']);
 goog.addDependency("../com/cognitect/transit/impl/reader.js", ['com.cognitect.transit.impl.reader'], ['com.cognitect.transit.impl.decoder', 'com.cognitect.transit.caching']);
 goog.addDependency("../clojure/set.js", ['clojure.set'], ['cljs.core']);
-goog.addDependency("../clojure/string.js", ['clojure.string'], ['goog.string', 'cljs.core', 'goog.string.StringBuffer']);
-goog.addDependency("../clojure/walk.js", ['clojure.walk'], ['cljs.core']);
 goog.addDependency("../sablono/util.js", ['sablono.util'], ['goog.Uri', 'cljs.core', 'clojure.set', 'clojure.string', 'clojure.walk']);
 goog.addDependency("../sablono/interpreter.js", ['sablono.interpreter'], ['sablono.util', 'cljs.core', 'clojure.string']);
 goog.addDependency("../com/cognitect/transit/handlers.js", ['com.cognitect.transit.handlers'], ['com.cognitect.transit.util', 'com.cognitect.transit.types', 'goog.math.Long']);
@@ -19,6 +22,5 @@ goog.addDependency("../com/cognitect/transit/impl/writer.js", ['com.cognitect.tr
 goog.addDependency("../com/cognitect/transit.js", ['com.cognitect.transit'], ['com.cognitect.transit.impl.reader', 'com.cognitect.transit.impl.writer', 'com.cognitect.transit.types', 'com.cognitect.transit.eq', 'com.cognitect.transit.impl.decoder']);
 goog.addDependency("../cognitect/transit.js", ['cognitect.transit'], ['com.cognitect.transit.eq', 'cljs.core', 'com.cognitect.transit.types', 'com.cognitect.transit', 'goog.math.Long']);
 goog.addDependency("../om/core.js", ['om.core'], ['cljs.core', 'om.dom', 'goog.ui.IdGenerator']);
-goog.addDependency("../cljs/reader.js", ['cljs.reader'], ['goog.string', 'cljs.core', 'goog.string.StringBuffer']);
 goog.addDependency("../sablono/core.js", ['sablono.core'], ['goog.dom', 'sablono.util', 'cljs.core', 'sablono.interpreter', 'clojure.string', 'clojure.walk']);
-goog.addDependency("../csv_visualiser/core.js", ['csv_visualiser.core'], ['goog.dom.classes', 'cljs.core', 'cognitect.transit', 'sablono.core', 'om.core', 'csv_visualiser.ednschema', 'clojure.string', 'cljs.reader', 'goog.events']);
+goog.addDependency("../edn_visualiser/core.js", ['edn_visualiser.core'], ['goog.dom.classes', 'cljs.core', 'cognitect.transit', 'sablono.core', 'om.core', 'edn_visualiser.ednschema', 'clojure.string', 'cljs.reader', 'goog.events']);
