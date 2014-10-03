@@ -4,13 +4,16 @@
             [goog.dom.classes :as classes]
             [sablono.core :as html :refer-macros [html]]
             [cljs.reader :as reader]
-            [clojure.string :as string])
-  (:import [goog.events EventType]))
+            [clojure.string :as string]
+            [csv-visualiser.ednschema :as edn]
+            [cognitect.transit :as t])
+ (:import [goog.events.EventType]))
 
 (enable-console-print!)
 
 (def app-model (atom {:contents []
-                      :alert {}}))
+                      :alert {}
+                      :root-name ""}))
 
 (defn log [& s]
   (.log js/console (apply str s)))
@@ -19,9 +22,12 @@
   (.getElementById js/document id))
 
 
-(defn process-file [file cursor]
- (let [datas (map #(string/split % ",") (string/split file "\n"))]
-   (om/update! cursor :contents datas)))
+(defn process-file [file-name file cursor]
+  (let [r (t/reader :json)
+        datas (t/read r file)]
+    (om/update! cursor :contents datas)
+    (om/update! cursor :root-name (.substring file-name 0 (.indexOf file-name ".")))
+    ))
 
 (defn handle-file-select [cursor evt]
   (.stopPropagation evt)
@@ -38,7 +44,7 @@
                                     (.log js/console idx)
                                     (.slice file-content 4 idx))
                                   (.-name the-file))]
-                  (process-file file-content cursor))))
+                  (process-file file-name file-content cursor))))
         (.readAsText rdr the-file)))))
 
 (defn handle-drag-over [evt]
@@ -63,42 +69,37 @@
     om/IRender
     (render [_]
       (html
-       [:p "Drop your CSV here"]))))
+       [:p "Drop your JSON here"]))))
 
-(defn csv-contents-table [cursor owner]
+
+(defn edn-contents-area [cursor owner]
   (reify
     om/IRender
     (render [_]
       (html
        [:div
         [:div.well.well-lg
-         [:table.table.table-striped.table-hover
-          [:thead
-           [:tr
-            (for [c (first (:contents cursor))]
-              [:th c])]]
-          [:tbody
-           (for [r (rest (:contents cursor))]
-              [:tr (for [d r]
-              [:td d])])
-           ]]]]))))
+         [:pre
+          (edn/pp
+           (reverse
+            (partition-by #(namespace (:db/ident %))
+                          (edn/to-schema (:root-name cursor) (:contents cursor)))))]
+         ]]))))
 
-(defn see-my-csv [cursor owner]
+(defn see-my-edn [cursor owner]
   (reify
     om/IRender
     (render [_]
       (html
        [:div
         [:div.class.page-header
-         [:h1 "See my CSV" [:button {:type "button"
-                                     :class "btn btn-warning pull-right"
-                                     :on-click (fn [e] (om/update! cursor :contents (apply map list (:contents @cursor))))} "Transpose!"]]]
+         [:h1 "See my EDN"]]
         (if-not (seq (:contents cursor))
           [:div {:id "drop-zone"}
            [:div.well.well-lg
             (om/build drop-zone cursor)]]
           [:div
-           (om/build csv-contents-table cursor)])]))))
+           (om/build edn-contents-area cursor)])]))))
 
-(om/root see-my-csv app-model
+(om/root see-my-edn app-model
          {:target (.getElementById js/document "app")})
